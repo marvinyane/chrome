@@ -34,6 +34,6 @@ $(document).ready(function(){
 	});
 	
 	localStorage.setItem('myInfo', data);
-	localStorage.setItem('isFirst', '0');
+	localStorage.setItem('step', '0');
 	localStorage.setItem('myCount', '0');
 });
