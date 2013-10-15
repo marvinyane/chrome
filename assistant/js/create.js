@@ -1,5 +1,7 @@
 $(document).ready(function(){
-	$("#btnCancel").bind("click",btnCancel);
+	$("#btnCancel").bind("click", btnCancel);
+	$("#btnQuery").bind("click", btnQuery);
+	$("#btnNew").bind("click", btnNew);
 
     var from = document.referrer;
 
@@ -9,6 +11,17 @@ $(document).ready(function(){
 		    localStorage.setItem('myCount', count.toString());
 		}
 	};
+
+    function btnQuery()
+    {
+        localStorage.setItem('query', '1');
+    }
+
+    function btnNew()
+    {
+        localStorage.setItem('query', '0');
+    }
+
 	
 	function autoSet(reason, item){
 		$('#TextBoxDATE_FROM').val(item[0]);
@@ -55,6 +68,14 @@ $(document).ready(function(){
 		
 		count = parseInt(prompt(output, 0));
 	}
+    else
+    {
+        var query = localStorage.getItem('query');
+        if(query == '1')
+         {
+            return false;
+         }
+    }
 
     if(step == 0)
     {
