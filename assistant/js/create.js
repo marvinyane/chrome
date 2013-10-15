@@ -26,8 +26,24 @@ $(document).ready(function(){
 	function autoSet(reason, item){
 		$('#TextBoxDATE_FROM').val(item[0]);
 		$('#TextBoxDATE_TO').val(item[0]);
+
+        if(item[1] == '六' || item[1] == '日')
+        {
+            var time_from = item[3].split(':');
+
+            if(time_from[1] <= '30'){
+                time_from[1] = '00';
+            }
+            else if(time_from[1] > '30'){
+                time_from[1] = '30';
+            }
+            $('#DropDownListTIME_FROM').attr('value', time_from[0] + ':' + time_from[1]);
+        }
 		
-		$('#DropDownListTIME_FROM').attr('value', '18:30')
+        else
+        {
+		    $('#DropDownListTIME_FROM').attr('value', '18:30')
+        }
 		
 		var time_to = item[4].split(':');
 		

@@ -9,7 +9,6 @@ $(document).ready(function(){
 				var item = {};
 				var i = 0;
 				$(this).find('td').each(function(){
-					//alert($(this).text());
 					item[i] = $(this).text().replace(/\s/g, "");
 					i++;
 				});
@@ -18,6 +17,11 @@ $(document).ready(function(){
 					if(item[4] > '19:00:00'){
 						items[item[0]] = item;
 					}
+
+                    if(item[1] == '六' || item[1] == '日')
+                    {
+						items[item[0]] = item;
+                    }
 				}
 			});
 		});		
