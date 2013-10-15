@@ -83,6 +83,7 @@ $(document).ready(function(){
 		});
 		
 		count = parseInt(prompt(output, 0));
+        localStorage.setItem('myCount', count.toString());
 	}
     else
     {
