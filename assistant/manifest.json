@@ -1,0 +1,43 @@
+{
+  "name": "Google Document List Viewer",
+  "version": "1.0",
+  "manifest_version":2,
+  "icons": {
+    "128": "img/icon-128.png"
+  },
+  "description": "pset oa assistant[Marvin Yane]",
+  "browser_action": {
+    "default_title": "PSET OA Assistant [Marvin Yane]",
+    "default_icon": "img/icon-32.png"
+  },
+  "content_scripts": [
+    {
+	  "matches": ["*://*/Programs/*ogin/login*"],
+      "run_at":"document_idle",
+      "css": ["css/jquery.css"],
+      "js": ["js/jquery-1.7.min.js","js/jquery-ui-1.8.min.js","js/login.js"],
+      
+      "all_frames":true
+      
+    },
+    { 
+      "matches": ["*://*/Programs/KQ/EmployeeInfoStatistic.aspx"],
+      "run_at": "document_idle",
+      "css": ["css/jquery.css"],
+      "js": ["js/jquery-1.7.min.js","js/jquery-ui-1.8.min.js","js/query.js"],
+       "all_frames": true
+    },
+	
+    { 
+      "matches": ["*://*/Programs/KQ/EmployeeRequestOvertime.aspx"],
+      "run_at": "document_idle",
+      "css": ["css/jquery.css"],
+      "js": ["js/jquery-1.7.min.js","js/jquery-ui-1.8.min.js","js/create.js"],
+       "all_frames": true
+    }
+  ],
+  "permissions": [
+    "tabs",
+    "https://docs.google.com/feeds/*"
+  ]
+}
