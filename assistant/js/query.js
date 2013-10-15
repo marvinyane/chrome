@@ -1,52 +1,4 @@
 $(document).ready(function(){
-	var UserData = {
-        userData : null,
-        name : location.hostname,
-
-        init:function(){
-            if (!UserData.userData) {
-                try {
-                    UserData.userData = document.createElement('INPUT');
-                    UserData.userData.type = "hidden";
-                    UserData.userData.style.display = "none";
-                    UserData.userData.addBehavior ("#default#userData");
-                    document.body.appendChild(UserData.userData);
-                    var expires = new Date();
-                    expires.setDate(expires.getDate()+365);
-                    UserData.userData.expires = expires.toUTCString();
-                } catch(e) {
-                    return false;
-                }
-            }
-            return true;
-        },
-
-        setItem : function(key, value) {
-
-            if(UserData.init()){
-                UserData.userData.load(UserData.name);
-                UserData.userData.setAttribute(key, value);
-                UserData.userData.save(UserData.name);
-            }
-        },
-
-        getItem : function(key) {
-            if(UserData.init()){
-            UserData.userData.load(UserData.name);
-            return UserData.userData.getAttribute(key)
-            }
-        },
-
-        remove : function(key) {
-            if(UserData.init()){
-            UserData.userData.load(UserData.name);
-            UserData.userData.removeAttribute(key);
-            UserData.userData.save(UserData.name);
-            }
-
-        }
-    };
-
 	var tables = $('#GridViewPUNCH_CARD_INFO');
 	
 	var items = {};
@@ -81,13 +33,7 @@ $(document).ready(function(){
 		data += '\r';
 	});
 	
-	if(!window.localStorage){
-		UserData.setItem('myInfo', data);
-		UserData.setItem('isFirst', '0');
-		UserData.setItem('myCount', '0');
-	}else{
-		localStorage.setItem('myInfo', data);
-		localStorage.setItem('isFirst', '0');
-		localStorage.setItem('myCount', '0');
-	}
+	localStorage.setItem('myInfo', data);
+	localStorage.setItem('isFirst', '0');
+	localStorage.setItem('myCount', '0');
 });

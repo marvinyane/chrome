@@ -1,53 +1,5 @@
 
 $(document).ready(function(){
-	var UserData = {
-        userData : null,
-        name : location.hostname,
-
-        init:function(){
-            if (!UserData.userData) {
-                try {
-                    UserData.userData = document.createElement('INPUT');
-                    UserData.userData.type = "hidden";
-                    UserData.userData.style.display = "none";
-                    UserData.userData.addBehavior ("#default#userData");
-                    document.body.appendChild(UserData.userData);
-                    var expires = new Date();
-                    expires.setDate(expires.getDate()+365);
-                    UserData.userData.expires = expires.toUTCString();
-                } catch(e) {
-                    return false;
-                }
-            }
-            return true;
-        },
-
-        setItem : function(key, value) {
-
-            if(UserData.init()){
-                UserData.userData.load(UserData.name);
-                UserData.userData.setAttribute(key, value);
-                UserData.userData.save(UserData.name);
-            }
-        },
-
-        getItem : function(key) {
-            if(UserData.init()){
-            UserData.userData.load(UserData.name);
-            return UserData.userData.getAttribute(key)
-            }
-        },
-
-        remove : function(key) {
-            if(UserData.init()){
-            UserData.userData.load(UserData.name);
-            UserData.userData.removeAttribute(key);
-            UserData.userData.save(UserData.name);
-            }
-
-        }
-    };
-	
 	var data = ""; 
 	var count = 0;
 	
@@ -56,21 +8,13 @@ $(document).ready(function(){
 	
 	function btnPost(){
 		count += 1;
-		if(!window.localStorage){
-			UserData.setItem('myCount', count.toString());
-		}else{
-			localStorage.setItem('myCount', count.toString());
-		}
+	    localStorage.setItem('myCount', count.toString());
 	};
 	
 	function btnPost(){
 		if(count > 0){
 			count -= 1;
-			if(!window.localStorage){
-				UserData.setItem('myCount', count.toString());
-			}else{
-				localStorage.setItem('myCount', count.toString());
-			}
+		    localStorage.setItem('myCount', count.toString());
 		}
 	};
 	
@@ -78,20 +22,12 @@ $(document).ready(function(){
 		var reason = null;
 		var item = items[count].split(' ');
 		
-		if(!window.localStorage){
-			reason = UserData.getItem('defaultReason');
-		}else{
-			reason = localStorage.getItem('defaultReason');
-		}
+		reason = localStorage.getItem('defaultReason');
 		
 		reason = prompt(item[0] + ' Default reason: ', reason);
 		
 		if(reason  != null){
-			if(!window.localStorage){
-				UserData.setItem('defaultReason', reason);
-			}else{
-				localStorage.setItem('defaultReason', reason);
-			}
+		    localStorage.setItem('defaultReason', reason);
 		}
 	
 		$('#TextBoxDATE_FROM').val(item[0]);
@@ -121,15 +57,9 @@ $(document).ready(function(){
 		//$('#btnPost').removeAttr('disabled');
 	}
 	
-	if(!window.localStorage){
-		data = UserData.getItem('myInfo');
-		isFirst = parseInt(UserData.getItem('isFirst'));
-		count = parseInt(UserData.getItem('myCount'));
-	}else{
-		data = localStorage.getItem('myInfo');
-		isFirst = parseInt(localStorage.getItem('isFirst'));
-		count = parseInt(localStorage.getItem('myCount'));
-	}
+	data = localStorage.getItem('myInfo');
+	isFirst = parseInt(localStorage.getItem('isFirst'));
+	count = parseInt(localStorage.getItem('myCount'));
 	
 	var items = data.split("\r");
 	if(isFirst == 0){
@@ -150,11 +80,7 @@ $(document).ready(function(){
 		
 		count = parseInt(prompt(output, 0));
 		
-		if(!window.localStorage){
-			UserData.setItem('isFirst', '1');
-		}else{
-			localStorage.setItem('isFirst', '1');
-		}
+		localStorage.setItem('isFirst', '1');
 	}
 
 	if(items.length > (count+1)){
