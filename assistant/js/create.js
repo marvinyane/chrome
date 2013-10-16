@@ -73,8 +73,12 @@ $(document).ready(function(){
     
 	if(from.search(/left/) != -1){
 		var output = 'Please choose start from : \r\r';
-
         count = 0;
+
+        if(items.length == 1)
+        {
+            return false;
+        }
 		$.each(items, function(key, value){
 			if(count < items.length-1){
 				var item = value.split(' ');
