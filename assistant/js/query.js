@@ -14,7 +14,7 @@ $(document).ready(function(){
 				});
 				
 				if(i >= 9){
-					if(item[4] > '19:00:00' || item[4] < '05:30:00'){
+					if(item[4] > '19:00:00' || item[4] < '05:30:00' && item[4] != ""){
 						items[item[0]] = item;
 					}
 

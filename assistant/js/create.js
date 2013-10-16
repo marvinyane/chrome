@@ -68,6 +68,8 @@ $(document).ready(function(){
     
 	if(from.search(/left/) != -1){
 		var output = 'Data from DATA1, please choose start from : \r\r';
+
+        count = 0;
 		$.each(items, function(key, value){
 			if(count < items.length-1){
 				var item = value.split(' ');
