@@ -13,15 +13,19 @@ $(document).ready(function(){
 					i++;
 				});
 				
-				if(i >= 9){
-					if(item[4] > '19:00:00' || item[4] < '05:30:00' && item[4] != ""){
-						items[item[0]] = item;
-					}
-
-                    if(item[1] == '六' || item[1] == '日')
+				if(i >= 9 && item[4] != null && item[4] != ""){
+                    if(item[0] >= '2013-10-01' && item[0] <= '2013-10-06')
+                    {
+                        items[item[0]] = item;
+                    }
+                    else if(item[1] == '六' || item[1] == '日')
                     {
 						items[item[0]] = item;
                     }
+                    else if(item[4] > '19:00:00' || item[4] < '05:30:00' && item[4] != ""){
+                        item[3] = '18:30:00';
+						items[item[0]] = item;
+					}
 				}
 			});
 		});		
@@ -40,4 +44,5 @@ $(document).ready(function(){
 	localStorage.setItem('myInfo', data);
 	localStorage.setItem('step', '0');
 	localStorage.setItem('myCount', '0');
+    localStorage.setItem('query', '0');
 });

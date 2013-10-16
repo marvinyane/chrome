@@ -3,6 +3,15 @@ $(document).ready(function(){
 	$("#btnQuery").bind("click", btnQuery);
 	$("#btnNew").bind("click", btnNew);
 
+    var weekday = {};
+    weekday['一'] = 'Mon';
+    weekday['二'] = 'Tus';
+    weekday['三'] = 'Wen';
+    weekday['四'] = 'Thu';
+    weekday['五'] = 'Fri';
+    weekday['六'] = 'Sat';
+    weekday['日'] = 'Sun';
+
     var from = document.referrer;
 
 	function btnCancel(){
@@ -23,43 +32,35 @@ $(document).ready(function(){
     }
 
 	
-	function autoSet(reason, item){
-		$('#TextBoxDATE_FROM').val(item[0]);
-		$('#TextBoxDATE_TO').val(item[0]);
+    function autoSet(reason, item){
+        $('#TextBoxDATE_FROM').val(item[0]);
+        $('#TextBoxDATE_TO').val(item[0]);
 
-        if(item[1] == '六' || item[1] == '日')
-        {
-            var time_from = item[3].split(':');
+        var time_from = item[3].split(':');
 
-            if(time_from[1] <= '30'){
-                time_from[1] = '00';
-            }
-            else if(time_from[1] > '30'){
-                time_from[1] = '30';
-            }
-            $('#DropDownListTIME_FROM').attr('value', time_from[0] + ':' + time_from[1]);
+        if(time_from[1] < '30'){
+            time_from[1] = '00';
         }
-		
-        else
-        {
-		    $('#DropDownListTIME_FROM').attr('value', '18:30')
+        else if(time_from[1] >= '30'){
+            time_from[1] = '30';
         }
-		
-		var time_to = item[4].split(':');
-		
-		if(time_to[1] <= '30'){
-			time_to[1] = '30';
-		}
-		else if(time_to[1] > '30'){
-			var hour = parseInt(time_to[0]) + 1;
-			time_to[0] = hour.toString();
-			time_to[1] = '00';
-		}
-		
-		$('#DropDownListTIME_TO').attr('value', time_to[0]+':'+time_to[1]);
-		
-		$('#TextBoxREASON').val(reason);
-	}
+        $('#DropDownListTIME_FROM').attr('value', time_from[0] + ':' + time_from[1]);
+
+        var time_to = item[4].split(':');
+
+        if(time_to[1] <= '30'){
+            time_to[1] = '30';
+        }
+        else if(time_to[1] > '30'){
+            var hour = parseInt(time_to[0]) + 1;
+            time_to[0] = hour.toString();
+            time_to[1] = '00';
+        }
+
+        $('#DropDownListTIME_TO').attr('value', time_to[0]+':'+time_to[1]);
+
+        $('#TextBoxREASON').val(reason);
+    }
 
     var data = localStorage.getItem('myInfo');
 	var step = parseInt(localStorage.getItem('step'));
@@ -67,19 +68,13 @@ $(document).ready(function(){
 	var items = data.split("\r");
     
 	if(from.search(/left/) != -1){
-		var output = 'Data from DATA1, please choose start from : \r\r';
+		var output = 'Please choose start from : \r\r';
 
         count = 0;
 		$.each(items, function(key, value){
 			if(count < items.length-1){
 				var item = value.split(' ');
-				output += '    ';
-				output += count;
-				output += ' : ';
-				output += item[0];
-				output += ' to ';
-				output += item[4];
-				output += '\r';
+				output = output+count+' : '+item[0]+' 周'+item[1]+' 从 '+item[3]+' 到 '+item[4]+'\r';
 				count ++;
 			}
 		});
@@ -98,6 +93,10 @@ $(document).ready(function(){
 
     if(step == 0)
     {
+        if(count + 1 >= items.length)
+        {
+            return false;
+        }
 		var reason = localStorage.getItem('defaultReason');
         var item = items[count].split(' ');
 
@@ -109,17 +108,12 @@ $(document).ready(function(){
         }
         else
         {
+            localStorage.setItem('myCount', (count+1).toString());
+            location.reload();
             return false;
         }
 
-        if(count + 1 < items.length)
-        {
-            autoSet(reason, item);
-        }
-        else
-        {
-            return false;
-        }
+        autoSet(reason, item);
 
         // set step to 1 - add info
         localStorage.setItem('step', '1');
