@@ -36,6 +36,7 @@
        "all_frames": true
     }
   ],
+
   "permissions": [
     "tabs",
     "https://docs.google.com/feeds/*"
