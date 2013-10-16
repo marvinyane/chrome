@@ -54,6 +54,10 @@ $(document).ready(function(){
         else if(time_to[1] > '30'){
             var hour = parseInt(time_to[0]) + 1;
             time_to[0] = hour.toString();
+            if(hour < 10)
+            {
+                time_to[0] = '0'+time_to[0];
+            }
             time_to[1] = '00';
         }
 
