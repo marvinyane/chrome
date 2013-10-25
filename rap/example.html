@@ -55,7 +55,7 @@
             var text = [];
             for(var i = 0; i < employees.length; i++){
                 var tmp_y = 100 + (i*120);
-                var tmp_x = 100 + (employees[i].x)*400;
+                var tmp_x = 100 + (employees[i].x)*400 - (employees[i].textname.length - 20)*4;
                 var size_x = employees[i].textname.length * 8 + 20;
                 var color = Raphael.getColor();
                 var tmp_shape = r.rect(tmp_x, tmp_y, size_x, 60, 4);
@@ -68,8 +68,6 @@
                         str += employees[this.id].param[i];
                         str += '\n';
                     }
-
-                    
                 })
                 shapes.push(tmp_shape);
 
