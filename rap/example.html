@@ -1,0 +1,164 @@
+<html lang="en">
+    <head>
+        <style type="text/css">
+        #holder
+        {
+            top: 0px;
+            left: 0px;
+            right: 0px;
+            bottom: 0px;
+            position: absolute;
+            z-index: 999;
+        }
+        </style>
+
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Marvin's Demo</title>
+        <script language="javascript" type="text/javascript" src="raphael.js"></script>
+        <script language="javascript" type="text/javascript" src="jquery-1.10.2.min.js"></script>
+        <script type="text/javascript" src="test.js"></script>
+        <script type="text/javascript" charset="utf-8">
+           $(function () {
+            //用来存储节点的顺序
+            var connections = [];
+            //拖动节点开始时的事件
+            var dragger = function () {
+                this.ox = this.attr("x");
+                this.oy = this.attr("y");
+                this.sx = this.attr("width");
+                this.animate({ "fill-opacity": .2 }, 500);
+            };
+            //拖动事件
+            var move = function (dx, dy) {
+                var att = { x: this.ox + dx, y: this.oy + dy };
+                this.attr(att);
+               // $("#test" + this.id).offset({ top: this.oy + dy + 10, left: this.ox + dx + 10 });
+               text[this.id].remove();
+               text[this.id] = r.text(this.ox+dx+this.sx/2, this.oy+dy+30, employees[this.id].textname)
+                for (var i = connections.length; i--; ) {
+                    r.drawArr(connections[i]);
+                }
+            };
+            //拖动结束后的事件
+            var up = function () {
+                this.animate({ "fill-opacity": 0 }, 500);
+            };
+            //创建绘图对象
+            var r = Raphael("holder", $(window).width(), employees.length * 120 + $(window).height());
+
+            r.path('M 400,50 V ' + (employees.length * 120 ) +' z');
+            r.path('M 800,50 V ' + (employees.length * 120 ) +' z');
+
+            //绘制节点
+            r.path('M 50,' + (tmp_y + 80) + ' H ' + ($(window).width() - 50) +' z');
+            var shapes = [];
+            var text = [];
+            for(var i = 0; i < employees.length; i++){
+                var tmp_y = 100 + (i*120);
+                var tmp_x = 100 + (employees[i].x)*400;
+                var size_x = employees[i].textname.length * 8 + 20;
+                var color = Raphael.getColor();
+                var tmp_shape = r.rect(tmp_x, tmp_y, size_x, 60, 4);
+                tmp_shape.attr({ fill: color, stroke: color, "fill-opacity": 0, "stroke-width": 2, cursor: "move" });
+                tmp_shape.id = i;
+                tmp_shape.drag(move, dragger, up);
+                tmp_shape.dblclick(function () {
+                    var str = "";
+                    for(var i = 0; i < employees[this.id].param.length; i++){
+                        str += employees[this.id].param[i];
+                        str += '\n';
+                    }
+
+                    
+                })
+                shapes.push(tmp_shape);
+
+                text.push(r.text(tmp_x+size_x/2, tmp_y+30, employees[i].textname));
+
+                if(i < employees.length-1 && employees[i+1].x == 0){
+                    r.path('M 50,' + (tmp_y + 80) + ' H ' + ($(window).width() - 50) +' z');
+                } 
+                if(i != 0 && employees[i].x != 0){
+                    connections.push(r.drawArr({ obj1: shapes[i-1], obj2: shapes[i] }));
+                }
+            }
+
+
+        });
+
+        //随着节点位置的改变动态改变箭头
+        Raphael.fn.drawArr = function (obj) {
+            var point = getStartEnd(obj.obj1, obj.obj2);
+            var path1 = getArr(point.start.x, point.start.y, point.end.x, point.end.y, 8);
+            if (obj.arrPath) {
+                obj.arrPath.attr({ path: path1 });
+            } else {
+                obj.arrPath = this.path(path1);
+            }
+            return obj;
+        }; 
+
+        function getStartEnd(obj1, obj2) {
+            var bb1 = obj1.getBBox(),
+                bb2 = obj2.getBBox();
+            var p = [
+                    { x: bb1.x + bb1.width / 2, y: bb1.y - 1 },
+                    { x: bb1.x + bb1.width / 2, y: bb1.y + bb1.height + 1 },
+                    { x: bb1.x - 1, y: bb1.y + bb1.height / 2 },
+                    { x: bb1.x + bb1.width + 1, y: bb1.y + bb1.height / 2 },
+                    { x: bb2.x + bb2.width / 2, y: bb2.y - 1 },
+                    { x: bb2.x + bb2.width / 2, y: bb2.y + bb2.height + 1 },
+                    { x: bb2.x - 1, y: bb2.y + bb2.height / 2 },
+                    { x: bb2.x + bb2.width + 1, y: bb2.y + bb2.height / 2 }
+                ];
+            var d = {}, dis = [];
+            for (var i = 0; i < 4; i++) {
+                for (var j = 4; j < 8; j++) {
+                    var dx = Math.abs(p[i].x - p[j].x),
+                        dy = Math.abs(p[i].y - p[j].y);
+                    if (
+                         (i == j - 4) ||
+                         (((i != 3 && j != 6) || p[i].x < p[j].x) &&
+                         ((i != 2 && j != 7) || p[i].x > p[j].x) &&
+                         ((i != 0 && j != 5) || p[i].y > p[j].y) &&
+                         ((i != 1 && j != 4) || p[i].y < p[j].y))
+                       ) {
+                        dis.push(dx + dy);
+                        d[dis[dis.length - 1]] = [i, j];
+                    }
+                }
+            }
+            if (dis.length == 0) {
+                var res = [0, 4];
+            } else {
+                res = d[Math.min.apply(Math, dis)];
+            }
+            var result = {};
+            result.start = {};
+            result.end = {};
+            result.start.x = p[res[0]].x;
+            result.start.y = p[res[0]].y;
+            result.end.x = p[res[1]].x;
+            result.end.y = p[res[1]].y;
+            return result;
+        }
+
+        //获取组成箭头的三条线段的路径
+        function getArr(x1, y1, x2, y2, size) {
+            var angle = Raphael.angle(x1, y1, x2, y2);//得到两点之间的角度
+            var a45 = Raphael.rad(angle - 45);//角度转换成弧度
+            var a45m = Raphael.rad(angle + 45);
+            var x2a = x2 + Math.cos(a45) * size;
+            var y2a = y2 + Math.sin(a45) * size;
+            var x2b = x2 + Math.cos(a45m) * size;
+            var y2b = y2 + Math.sin(a45m) * size;
+            var result = ["M", x1, y1, "L", x2, y2, "L", x2a, y2a, "M", x2, y2, "L", x2b, y2b];
+            return result;
+        }
+    </script>
+    </head>
+    <body>
+        <div id="holder"></div>
+    </body>
+</html>
+
