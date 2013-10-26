@@ -32,9 +32,15 @@
             var move = function (dx, dy) {
                 var att = { x: this.ox + dx, y: this.oy + dy };
                 this.attr(att);
-               // $("#test" + this.id).offset({ top: this.oy + dy + 10, left: this.ox + dx + 10 });
-               text[this.id].remove();
-               text[this.id] = r.text(this.ox+dx+this.sx/2, this.oy+dy+30, employees[this.id].textname)
+
+                var t_t = r.getById(this.id + 100);
+                att = {x: this.ox+dx+this.sx/2, y :  this.oy+dy+30 };
+                t_t.attr(att);
+
+                var t_p = r.getById(this.id + 200);
+                att = {x: this.ox+dx+this.sx/2, y :  this.oy+dy-30 };
+                t_p.attr(att);
+
                 for (var i = connections.length; i--; ) {
                     r.drawArr(connections[i]);
                 }
@@ -43,6 +49,28 @@
             var up = function () {
                 this.animate({ "fill-opacity": 0 }, 500);
             };
+
+            var dblclick = function(){
+            }
+
+            var moveup = function(){
+                var start = this.id + 101;
+                r.getById(this.id+200).show();
+                while(r.getById(start).attr('text').substr(-3) != 'REQ'){
+                    r.getById(start + 100).show();
+                    start++;
+                }
+            }
+
+            var movedown = function(){
+                var start = this.id + 101;
+                r.getById(this.id+200).hide();
+                while(r.getById(start).attr('text').substr(-3) != 'REQ'){
+                    r.getById(start + 100).hide();
+                    start++;
+                }
+            }
+
             //创建绘图对象
             var r = Raphael("holder", $(window).width(), employees.length * 120 + $(window).height());
 
@@ -51,8 +79,8 @@
 
             //绘制节点
             r.path('M 50,' + (tmp_y + 80) + ' H ' + ($(window).width() - 50) +' z');
+
             var shapes = [];
-            var text = [];
             for(var i = 0; i < employees.length; i++){
                 var tmp_y = 100 + (i*120);
                 var tmp_x = 100 + (employees[i].x)*400 - (employees[i].textname.length - 20)*4;
@@ -62,16 +90,25 @@
                 tmp_shape.attr({ fill: color, stroke: color, "fill-opacity": 0, "stroke-width": 2, cursor: "move" });
                 tmp_shape.id = i;
                 tmp_shape.drag(move, dragger, up);
-                tmp_shape.dblclick(function () {
-                    var str = "";
-                    for(var i = 0; i < employees[this.id].param.length; i++){
-                        str += employees[this.id].param[i];
-                        str += '\n';
-                    }
-                })
+                tmp_shape.dblclick(dblclick);
+                tmp_shape.mouseover(moveup);
+                tmp_shape.mouseout(movedown);
+
                 shapes.push(tmp_shape);
 
-                text.push(r.text(tmp_x+size_x/2, tmp_y+30, employees[i].textname));
+                var tmp_text = r.text(tmp_x+size_x/2, tmp_y+30, employees[i].textname);
+                tmp_text.id = i + 100;
+                tmp_text.dblclick(dblclick);
+                tmp_text.mouseover(moveup);
+                tmp_text.mouseout(movedown);
+
+                var tmp_param_str = "";
+                for (t_s in employees[i].param){
+                    tmp_param_str += employees[i].param[t_s];
+                }
+                var tmp_param = r.text(tmp_x+size_x/2, tmp_y-30, tmp_param_str);
+                tmp_param.id = i + 200;
+                tmp_param.hide();
 
                 if(i < employees.length-1 && employees[i+1].x == 0){
                     r.path('M 50,' + (tmp_y + 80) + ' H ' + ($(window).width() - 50) +' z');
