@@ -26,18 +26,18 @@
                 this.ox = this.attr("x");
                 this.oy = this.attr("y");
                 this.sx = this.attr("width");
-                this.animate({ "fill-opacity": .2 }, 500);
+                this.animate({ "fill-opacity": 1 }, 500);
             };
             //拖动事件
             var move = function (dx, dy) {
                 var att = { x: this.ox + dx, y: this.oy + dy };
                 this.attr(att);
 
-                var t_t = r.getById(this.id + 100);
+                var t_t = r.getById(this.id + employees.length);
                 att = {x: this.ox+dx+this.sx/2, y :  this.oy+dy+30 };
                 t_t.attr(att);
 
-                var t_p = r.getById(this.id + 200);
+                var t_p = r.getById(this.id + employees.length*2);
                 att = {x: this.ox+dx+this.sx/2, y :  this.oy+dy-30 };
                 t_p.attr(att);
 
@@ -47,35 +47,39 @@
             };
             //拖动结束后的事件
             var up = function () {
-                this.animate({ "fill-opacity": 0 }, 500);
+                this.animate({ "fill-opacity": .2 }, 500);
             };
 
             var dblclick = function(){
             }
 
             var moveup = function(){
-                var start = this.id + 101;
-                r.getById(this.id+200).show();
-                while(r.getById(start).attr('text').substr(-3) != 'REQ'){
-                    r.getById(start + 100).show();
-                    start++;
+                var y = employees[this.id].y;
+
+                for(var i = 0; i < employees.length; i++){
+                    if(employees[i].y == y){
+                    	var t = r.getById(i+employees.length*2);
+                    	t.show();
+                       // r.getById(i+200).show();
+                    }
                 }
             }
 
             var movedown = function(){
-                var start = this.id + 101;
-                r.getById(this.id+200).hide();
-                while(r.getById(start).attr('text').substr(-3) != 'REQ'){
-                    r.getById(start + 100).hide();
-                    start++;
+                var y = employees[this.id].y;
+
+                for(var i = 0; i < employees.length; i++){
+                    if(employees[i].y == y){
+                        r.getById(i+employees.length*2).hide();
+                    }
                 }
             }
 
             //创建绘图对象
             var r = Raphael("holder", $(window).width(), employees.length * 120 + $(window).height());
 
-            r.path('M 400,50 V ' + (employees.length * 120 ) +' z');
-            r.path('M 800,50 V ' + (employees.length * 120 ) +' z');
+            r.path('M 400,50 V '+(employees.length * 120 )+' z').attr({fill: "#fff", "stroke-width": 2});
+            r.path('M 800,50 V ' + (employees.length * 120 ) +' z').attr({fill: "#fff", "stroke-width": 2});
 
             //绘制节点
             r.path('M 50,' + (tmp_y + 80) + ' H ' + ($(window).width() - 50) +' z');
@@ -93,32 +97,47 @@
                 tmp_shape.dblclick(dblclick);
                 tmp_shape.mouseover(moveup);
                 tmp_shape.mouseout(movedown);
+                tmp_shape.animate({ "fill-opacity": .2 }, 500);
 
                 shapes.push(tmp_shape);
 
                 var tmp_text = r.text(tmp_x+size_x/2, tmp_y+30, employees[i].textname);
-                tmp_text.id = i + 100;
+                tmp_text.id = i + employees.length;
                 tmp_text.dblclick(dblclick);
-                tmp_text.mouseover(moveup);
-                tmp_text.mouseout(movedown);
 
-                var tmp_param_str = "";
-                for (t_s in employees[i].param){
-                    tmp_param_str += employees[i].param[t_s];
-                }
+                var tmp_param_str = employees[i].param.replace(/\n/, " ");
                 var tmp_param = r.text(tmp_x+size_x/2, tmp_y-30, tmp_param_str);
-                tmp_param.id = i + 200;
+                tmp_param.id = i + (employees.length*2);
                 tmp_param.hide();
 
-                if(i < employees.length-1 && employees[i+1].x == 0){
-                    r.path('M 50,' + (tmp_y + 80) + ' H ' + ($(window).width() - 50) +' z');
-                } 
-                if(i != 0 && employees[i].x != 0){
-                    connections.push(r.drawArr({ obj1: shapes[i-1], obj2: shapes[i] }));
+                var tmp_cir = r.circle(30, tmp_y+30, 10).attr({stroke: "none", fill: "#666"}).click(function(){
+                    this.attr({fill: "#fff", r: 12}).animate({fill: "#666", r: 8}, 500);
+                });
+
+                r.text(30, tmp_y+50, employees[i].timevalue);
+            }
+
+            for (var i = shapes.length - 1; i > 0; i--) {
+                for(var j = i-1; j>=0; j--){
+                    if(employees[shapes[i].id].y == employees[shapes[j].id].y){
+                        connections.push(r.drawArr({ obj1: shapes[j], obj2: shapes[i] }));
+                        break;
+                    }
                 }
             }
 
+//           r.path("M320,240c-50,100,50,110,0,190").attr({fill: "none", "stroke-width": 2});
+/*
+            var mover = r.circle(30, 130, 12);
+            mover.attr({fill: "#000", stroke: "#fff", "fill-opacity": 0});
+            mover.click(function(){
+                this.attr({fill: "#000", stroke: "#fff", "fill-opacity": 0});
+                this.cy = this.cy || 250;
+                this.animate({cy: this.cy, "stroke-width": this.cy / 100, fill: "hsb(.7, .75, .75)", "fill-opacity": +!!(this.cy - 130)}, 1000, "backOut");
+                this.cy = this.cy + 120;
 
+            });
+*/
         });
 
         //随着节点位置的改变动态改变箭头
