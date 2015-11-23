@@ -1,44 +1,34 @@
 {
-  "name": "PSET OA ASSISTANT",
-  "version": "1.1",
-  "manifest_version":2,
-  "icons": {
-    "128": "img/icon-128.png"
-  },
-  "description": "pset oa assistant[Marvin Yane]",
-  "browser_action": {
-    "default_title": "PSET OA Assistant [Marvin Yane]",
-    "default_icon": "img/icon-32.png"
-  },
-  "content_scripts": [
-    {
-	  "matches": ["*://*/Programs/*ogin/login*"],
-      "run_at":"document_idle",
-      "css": ["css/jquery.css"],
-      "js": ["js/jquery-1.7.min.js","js/jquery-ui-1.8.min.js","js/login.js"],
-      
-      "all_frames":true
-      
-    },
-    { 
-      "matches": ["*://*/Programs/KQ/EmployeeInfoStatistic.aspx"],
-      "run_at": "document_idle",
-      "css": ["css/jquery.css"],
-      "js": ["js/jquery-1.7.min.js","js/jquery-ui-1.8.min.js","js/query.js"],
-       "all_frames": true
-    },
-	
-    { 
-      "matches": ["*://*/Programs/KQ/EmployeeRequestOvertime.aspx"],
-      "run_at": "document_idle",
-      "css": ["css/jquery.css"],
-      "js": ["js/jquery-1.7.min.js","js/jquery-ui-1.8.min.js","js/create.js"],
-       "all_frames": true
-    }
-  ],
-
-  "permissions": [
-    "tabs",
-    "https://docs.google.com/feeds/*"
-  ]
+   "browser_action": {
+      "default_icon": "img/icon-32.png",
+      "default_title": "加班狗"
+   },
+   "content_scripts": [ {
+      "all_frames": true,
+      "css": [ "css/jquery.css" ],
+      "js": [ "js/jquery-1.7.min.js", "js/jquery-ui-1.8.min.js", "js/login.js" ],
+      "matches": [ "*://*/Programs/*ogin/login*" ],
+      "run_at": "document_idle"
+   }, {
+      "all_frames": true,
+      "css": [ "css/jquery.css" ],
+      "js": [ "js/jquery-1.7.min.js", "js/jquery-ui-1.8.min.js", "js/query.js" ],
+      "matches": [ "*://*/Programs/KQ/EmployeeInfoStatistic.aspx" ],
+      "run_at": "document_idle"
+   }, {
+      "all_frames": true,
+      "css": [ "css/jquery.css" ],
+      "js": [ "js/jquery-1.7.min.js", "js/jquery-ui-1.8.min.js", "js/create.js" ],
+      "matches": [ "*://*/Programs/KQ/EmployeeRequestOvertime.aspx" ],
+      "run_at": "document_idle"
+   } ],
+   "description": "puppy",
+   "icons": {
+      "128": "img/icon-128.png"
+   },
+   "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCoyDWQBFh7/z3tjh52xU/7foVD2rsPkM+Ze9o1jio1zmYKSP1vNBG1yp5FumN53yyWqy4SODDdgST4NIS2I1Lw8nMj4UrQCvbn5trfMLX2dcfMvIaOF23UyQscBjLLDQX4kWPw0WcEkN5fghl5c9QuEJOAsMLN4dsk7BJrOH7UCQIDAQAB",
+   "manifest_version": 2,
+   "name": "加班狗",
+   "permissions": [ "tabs", "https://docs.google.com/feeds/*" ],
+   "version": "1.1"
 }

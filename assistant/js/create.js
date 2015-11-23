@@ -117,7 +117,7 @@ $(document).ready(function(){
         else
         {
             localStorage.setItem('myCount', (count+1).toString());
-            location.reload();
+            location.reload(true);
             return false;
         }
 
@@ -145,11 +145,11 @@ $(document).ready(function(){
         localStorage.setItem('step', '2');
         localStorage.setItem('myCount', (count+1).toString());
         $('#btnPost').click();
-
     }
     else if(step == 2)
     {
-        location.reload();
+        //location.reload(true);
+		$('#btnNew').click();
         localStorage.setItem('step', '0');
     }
 
